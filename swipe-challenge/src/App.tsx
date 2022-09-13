@@ -1,16 +1,28 @@
 import React from "react";
-import Logo from "../src/assets/img/logo.svg";
+import Layout from "./components/shared/Layout";
 
-import "./scss/SC.scss";
+import "./scss/SC.css";
 
 function App() {
+  //API requests
+
+  //Layout
+
+  //Card component
+
+  //Motion
+
+  //LocalStorage
+
+  //Like
+
+  //Dislike
+
+  //Add data to memory
+
   return (
     <div className="App">
-      <header className="App-header">
-        <div className="header-logo">
-          <Logo />
-        </div>
-      </header>
+      <Layout />
     </div>
   );
 }
