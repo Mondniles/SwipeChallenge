@@ -1,0 +1,12 @@
+@import "./variables";
+
+.App{
+    min-width: $site-width;
+    min-height: $site-height;
+    background-color: $background-colour;
+}
+
+.header-logo{
+    width: $logo-width;
+    height: $logo-height;
+}
