@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Layout from "./components/shared/Layout";
 
 import "./scss/SC.css";
@@ -6,7 +6,11 @@ import "./scss/SC.css";
 function App() {
   //API requests
 
-  //Layout
+  // https://creative-tech-code-quest.vercel.app/api/swipe GET
+
+  // model for data CardDetailsModel
+
+  //Layout - DONE
 
   //Card component
 

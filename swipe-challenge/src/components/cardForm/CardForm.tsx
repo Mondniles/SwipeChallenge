@@ -1,15 +1,30 @@
 import React, { Component } from "react";
-import { Typography } from "@mui/material";
+import { ReactComponent as Rectangle } from "../../assets/img/card-rect.svg";
+import { CardDetailsModel } from "../../models/CardDetailsModel";
+import CardDetails from "./CardDetails";
 
-type Props = {};
+// card data details will be passed through here
 
-type State = {};
+interface IProps {
+  cardDetails?: CardDetailsModel;
+}
 
-class CardForm extends Component<Props, State> {
-  state = {};
+interface IState {}
+
+class CardForm extends Component<IProps, IState> {
+  constructor(props: any) {
+    super(props);
+
+    this.state = {};
+  }
 
   render() {
-    return <CardForm />;
+    return (
+      <div className="card-wrapper">
+        <div className="card-content"></div>
+        <Rectangle />
+      </div>
+    );
   }
 }
 

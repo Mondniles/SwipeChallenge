@@ -7,15 +7,25 @@ import { ReactComponent as ThumbDown } from "../../assets/img/thumb-down.svg";
 import { ReactComponent as ThumbUp } from "../../assets/img/thumb-up.svg";
 
 import { Container, Grid } from "@mui/material";
-import "../../scss/SC.css";
 import CardFormStack from "../cardForm/CardFormStack";
 
-type Props = {};
+import "../../scss/SC.css";
+import { CardDetailsModel } from "../../models/CardDetailsModel";
 
-type State = {};
+interface IProps {}
 
-class Layout extends Component<Props, State> {
-  state = {};
+interface IState {
+  loading?: boolean;
+  error?: boolean;
+  data?: Array<CardDetailsModel>;
+}
+
+class Layout extends React.Component<IProps, IState> {
+  constructor(props: any) {
+    super(props);
+
+    this.state = {};
+  }
 
   render() {
     return (
@@ -47,7 +57,7 @@ class Layout extends Component<Props, State> {
               </Grid>
             </Grid>
             <Grid item className="card-stack" xs={6}>
-              <CardFormStack />
+              <CardFormStack data={this.state.data} />
             </Grid>
             <Grid item xs={1} />
             <Grid item className="like-btn-wrapper" xs={2}>
@@ -67,6 +77,22 @@ class Layout extends Component<Props, State> {
         </Grid>
       </Container>
     );
+  }
+
+  loadData() {
+    fetch("https://creative-tech-code-quest.vercel.app/api/swipe")
+      .then((res) => res.json())
+      .then((res: Array<CardDetailsModel>) => {
+        this.setState({
+          data: res,
+        });
+        console.log(this.state.data);
+      })
+      .catch();
+  }
+
+  componentDidMount(): void {
+    this.loadData();
   }
 }
 

@@ -17,6 +17,12 @@ $logo-height: 1rem;
     color: $main-colour;
 }
 
+.card-details-form{
+    display: grid;
+    position: relative;
+    z-index: 100;
+}
+
 .dislike-btn-wrapper{
     display: flex;
     margin: auto !important;
