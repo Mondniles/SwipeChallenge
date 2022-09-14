@@ -29,6 +29,29 @@
   transform: translate(-50%, -30%);
 }
 
+.front-card:hover {
+  scale: 1.0025;
+}
+
+.card-content {
+  position: absolute;
+  width: 11rem;
+  transform: translate(2%, 30%);
+}
+
+.card-title {
+  text-transform: uppercase;
+  text-decoration: underline;
+  padding-bottom: 1rem;
+  font-size: 22px;
+}
+
+.card-body {
+  padding: 1rem;
+  text-justify: auto;
+  font-size: 18px;
+}
+
 .bg-card-1 {
   z-index: 5;
   position: absolute;

@@ -3,5 +3,5 @@ export class CardDetailsModel{
     body!: string;
     title!: string;
     image!: string;
-    status?: null;
+    status?: boolean;
 }

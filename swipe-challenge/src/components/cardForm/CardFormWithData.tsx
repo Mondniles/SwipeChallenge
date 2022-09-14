@@ -1,43 +1,34 @@
+import { motion, useDragControls } from "framer-motion";
 import React, { Component } from "react";
 import { ReactComponent as Rectangle } from "../../assets/img/card-rect.svg";
 import { CardDetailsModel } from "../../models/CardDetailsModel";
-import CardDetails from "./CardDetails";
 
 // card data details will be passed through here
 
-interface IProps {
-  cardDetails?: CardDetailsModel;
-}
+export default function CardFormWithData(
+  cardDetails?: CardDetailsModel,
+  checkStatus?: (card: CardDetailsModel) => boolean | null
+) {
+  if (cardDetails) {
+    const details: CardDetailsModel = {
+      id: cardDetails.id || 0,
+      body: cardDetails.body || "",
+      image: cardDetails.image || "",
+      title: cardDetails.title || "Not found",
+    };
 
-interface IState {}
-
-class CardFormWithData extends Component<IProps, IState> {
-  constructor(props: any) {
-    super(props);
-
-    this.state = {};
-  }
-
-  render() {
-    if (this.props.cardDetails) {
-      const details: CardDetailsModel = {
-        id: this.props.cardDetails.id || 0,
-        body: this.props.cardDetails.body || "",
-        image: this.props.cardDetails.image || "",
-        title: this.props.cardDetails.title || "Not found",
-      };
-
-      return (
+    return (
+      <React.Fragment>
         <div className="card-wrapper">
           <div className="card-content">
-            <CardDetails data={details} />
+            <div className="card-details-form">
+              <a className="card-title">{details.title}</a>
+              <a className="card-body">{details.body}</a>
+            </div>
           </div>
           <Rectangle />
         </div>
-      );
-    }
-    return null;
+      </React.Fragment>
+    );
   }
 }
-
-export default CardFormWithData;

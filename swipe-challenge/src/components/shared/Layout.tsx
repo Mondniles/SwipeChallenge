@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Container, Grid } from "@mui/material";
 
 import { ReactComponent as AppLogo } from "../../assets/img/appLogo.svg";
 import { ReactComponent as ArrowLeft } from "../../assets/img/arrow-left.svg";
@@ -6,17 +7,17 @@ import { ReactComponent as ArrowRight } from "../../assets/img/arrow-right.svg";
 import { ReactComponent as ThumbDown } from "../../assets/img/thumb-down.svg";
 import { ReactComponent as ThumbUp } from "../../assets/img/thumb-up.svg";
 
-import { Container, Grid } from "@mui/material";
 import CardFormStack from "../cardForm/CardFormStack";
+import { CardDetailsModel } from "../../models/CardDetailsModel";
 
 import "../../scss/SC.css";
-import { CardDetailsModel } from "../../models/CardDetailsModel";
 
 interface IProps {}
 
 interface IState {
   loading?: boolean;
   error?: boolean;
+  cardNumber: number;
   data?: Array<CardDetailsModel>;
 }
 
@@ -24,7 +25,9 @@ class Layout extends React.Component<IProps, IState> {
   constructor(props: any) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      cardNumber: 0,
+    };
   }
 
   render() {
@@ -57,7 +60,7 @@ class Layout extends React.Component<IProps, IState> {
               </Grid>
             </Grid>
             <Grid item className="card-stack" xs={6}>
-              <CardFormStack data={this.state.data} />
+              {CardFormStack(this.state.cardNumber, this.state.data)}
             </Grid>
             <Grid item xs={1} />
             <Grid item className="like-btn-wrapper" xs={2}>
