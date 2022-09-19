@@ -1,4 +1,4 @@
-import { styled } from "@mui/material";
+import { styled, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import React from "react";
 import { CardDetailsModel } from "../../models/CardDetailsModel";
@@ -11,97 +11,152 @@ export const FrontCard = styled(motion.div)`
   transform: translate(-50%, -30%);
 `;
 
-export function CardFormStack(cardNumber: number, data?: CardDetailsModel[]) {
-  if (!data) {
-    return null;
+interface IProps {
+  cardNumber: number;
+  data?: Array<CardDetailsModel>;
+}
+
+interface IState {
+  cards?: Array<CardDetailsModel>;
+  likedCards: Array<CardDetailsModel>;
+  dislikedCards: Array<CardDetailsModel>;
+  activeCardNumber?: number;
+  cardsRated: boolean;
+}
+
+class CardFormStack extends React.Component<IProps, IState> {
+  constructor(props: any) {
+    super(props);
+
+    this.state = {
+      cardsRated: false,
+      likedCards: [],
+      dislikedCards: [],
+      activeCardNumber: this.props.cardNumber,
+    };
   }
 
-  const cards = data;
+  render() {
+    if (!this.props.data) return null;
 
-  let liked: Array<CardDetailsModel> = [];
+    let loadedCards = this.props.data;
 
-  let disliked: Array<CardDetailsModel> = [];
+    let liked: Array<CardDetailsModel> = [];
 
-  let lock: boolean = false;
+    let disliked: Array<CardDetailsModel> = [];
 
-  let currentCard = cardNumber;
+    const updateStatus = () => {
+      this.setState({
+        cards: loadedCards,
+      });
+    };
 
-  const votingEvent = (xCoordinate: number, card: CardDetailsModel): void => {
-    //Depending on drag ending coordination, cast vote and reload next card
+    const votingEvent = (xCoordinate: number, card: CardDetailsModel): void => {
+      //Depending on drag ending coordination, cast vote and reload next card
 
-    if (xCoordinate < 450) {
-      if (!disliked.includes(card)) {
-        cards[currentCard].status = false;
-        disliked.push(card);
-
-        const index = cards.indexOf(card, 0);
-        if (index > -1) {
-          cards.splice(index, 1);
-        }
-      }
-    }
-
-    if (xCoordinate > 1300) {
-      if (!liked.includes(card)) {
-        cards[currentCard].status = false;
-        liked.push(card);
-
-        const index = cards.indexOf(card, 0);
-        if (index > -1) {
-          cards.splice(index, 1);
-        }
+      if (loadedCards.length <= 1) {
+        this.setState({
+          cardsRated: true,
+        });
+        return;
       }
 
-      console.log("LIKED", liked);
+      if (xCoordinate < 450) {
+        if (!disliked.includes(card)) {
+          disliked = this.state.dislikedCards;
+          loadedCards[card.id - 1].status = false;
+          disliked.push(card);
+
+          const index = loadedCards.indexOf(card, 0);
+          if (index > -1) {
+            loadedCards.splice(index, 1);
+          }
+        }
+
+        this.setState({
+          dislikedCards: disliked,
+        });
+      }
+
+      if (xCoordinate > 1300) {
+        if (!this.state.likedCards.includes(card)) {
+          liked = this.state.likedCards;
+
+          loadedCards[card.id - 1].status = true;
+          liked.push(card);
+
+          const index = loadedCards.indexOf(card, 0);
+          if (index > -1) {
+            loadedCards.splice(index, 1);
+          }
+        }
+
+        this.setState({
+          likedCards: liked,
+        });
+      }
+    };
+
+    if (!this.state.cardsRated) {
+      return (
+        <div className="card-stack">
+          <>
+            {loadedCards.map((card) => {
+              return (
+                <FrontCard
+                  key={card.id}
+                  drag="x"
+                  dragConstraints={{
+                    left: -600,
+                    right: 500,
+                    top: 0,
+                    bottom: 0,
+                  }}
+                  onDragEnd={(e, info) => {
+                    votingEvent(info.point.x, card);
+                  }}
+                  className="front-card"
+                >
+                  {CardFormWithData(loadedCards[card.id - 1])}
+                </FrontCard>
+              );
+            })}
+          </>
+        </div>
+      );
     }
-  };
 
-  const checkStatus = (card: CardDetailsModel): boolean | null => {
-    if (liked.includes(card)) return true;
-    if (disliked.includes(card)) return false;
-
-    return null;
-  };
-
-  let setLabel = (card: CardDetailsModel): string => {
-    if (checkStatus(card)) {
-      return "LIKED";
-    }
-    if (!checkStatus(card)) {
-      return "DISLIKED";
-    }
-    return "UNKNOWN";
-  };
-
-  return (
-    <div className="card-stack">
-      <>
-        {cards.map((card) => {
-          return (
-            <FrontCard
-              key={card.id}
-              drag="x"
-              dragConstraints={{
-                left: -600,
-                right: 500,
-                top: 0,
-                bottom: 0,
-              }}
-              onDragEnd={(e, info) => {
-                votingEvent(info.point.x, card);
-                setLabel(card);
-                console.log(info.point.x, info.point.y);
-              }}
-              className="front-card"
-            >
-              <a>{setLabel(card)}</a>
-              {CardFormWithData(cards[card.id - 1])}
-            </FrontCard>
-          );
-        })}
-      </>
-    </div>
-  );
+    return (
+      <div className="card-stack">
+        <>
+          <Typography>Thanks for rating!</Typography>
+          <span>
+            Liked cards:{" "}
+            {this.state.likedCards.map((card) => {
+              return (
+                <div key={card.id}>
+                  <span>{card.title}</span>
+                  <br />
+                </div>
+              );
+            })}
+          </span>
+          <br />
+          <span>
+            Disliked cards:
+            {this.state.dislikedCards.map((card) => {
+              return (
+                <div key={card.id}>
+                  <span>{card.title}</span>
+                  <br />
+                </div>
+              );
+            })}
+          </span>
+        </>
+      </div>
+    );
+  }
 }
 
 export default CardFormStack;

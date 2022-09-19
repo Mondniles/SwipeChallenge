@@ -1,5 +1,5 @@
 $background-colour: #0336FF;
-$site-font: 'Rubik', 'Serif';
+$site-font: 'Rubik' !important;
 $site-height: 100vh;
 $site-width: 100vw;
 
@@ -9,6 +9,16 @@ $dislike-colour: #ff0000;
 
 $logo-width: 1rem;
 $logo-height: 1rem;
+
+
+@font-face {
+    font-family: 'Rubik';
+    src: url('../assets/fonts/Rubik-Regular.ttf');
+}
+
+*{
+    font-family: 'Rubik';
+}
 
 .App{
     min-width: $site-width;
@@ -48,14 +58,14 @@ $logo-height: 1rem;
 .card-content{
     position: absolute;
     width: 11rem;
-    transform: translate(2%, 30%);
+    transform: translate(2%, 12%);
 }
 
 .card-title{
     text-transform: uppercase;
     text-decoration: underline;
     padding-bottom: 1rem;
-    font-size: 22px;
+    font-size: 20px;
 }
 
 .card-body{

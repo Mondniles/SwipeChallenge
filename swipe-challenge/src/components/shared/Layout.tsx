@@ -60,7 +60,10 @@ class Layout extends React.Component<IProps, IState> {
               </Grid>
             </Grid>
             <Grid item className="card-stack" xs={6}>
-              {CardFormStack(this.state.cardNumber, this.state.data)}
+              <CardFormStack
+                data={this.state.data}
+                cardNumber={this.state.cardNumber}
+              />
             </Grid>
             <Grid item xs={1} />
             <Grid item className="like-btn-wrapper" xs={2}>
@@ -89,7 +92,6 @@ class Layout extends React.Component<IProps, IState> {
         this.setState({
           data: res,
         });
-        console.log(this.state.data);
       })
       .catch();
   }
