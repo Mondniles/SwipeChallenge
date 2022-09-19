@@ -1,9 +1,9 @@
-import { motion, useDragControls } from "framer-motion";
-import React, { Component } from "react";
+import React from "react";
+
 import { ReactComponent as Rectangle } from "../../assets/img/card-rect.svg";
 import { CardDetailsModel } from "../../models/CardDetailsModel";
 
-// card data details will be passed through here
+// Displaying card data within card
 
 export default function CardFormWithData(
   cardDetails?: CardDetailsModel,

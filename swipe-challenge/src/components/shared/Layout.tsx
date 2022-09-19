@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Container, Grid } from "@mui/material";
 
 import { ReactComponent as AppLogo } from "../../assets/img/appLogo.svg";
@@ -20,6 +20,8 @@ interface IState {
   cardNumber: number;
   data?: Array<CardDetailsModel>;
 }
+
+/// Simple layout with data loading request
 
 class Layout extends React.Component<IProps, IState> {
   constructor(props: any) {

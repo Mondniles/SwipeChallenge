@@ -1,6 +1,7 @@
-import { styled, Typography } from "@mui/material";
-import { motion } from "framer-motion";
 import React from "react";
+import { styled } from "@mui/material";
+import { motion } from "framer-motion";
+
 import { CardDetailsModel } from "../../models/CardDetailsModel";
 import CardFormWithData from "./CardFormWithData";
 
@@ -20,9 +21,12 @@ interface IState {
   cards?: Array<CardDetailsModel>;
   likedCards: Array<CardDetailsModel>;
   dislikedCards: Array<CardDetailsModel>;
+  result?: Array<CardDetailsModel>;
   activeCardNumber?: number;
   cardsRated: boolean;
 }
+
+/// WILL RENDER CARD BY CARD ON STACK AND SEND DATA TO API AFTER ALL CARDS HAD BEEN RATED
 
 class CardFormStack extends React.Component<IProps, IState> {
   constructor(props: any) {
@@ -37,6 +41,8 @@ class CardFormStack extends React.Component<IProps, IState> {
   }
 
   render() {
+    // DEFINE VARIABLES
+
     if (!this.props.data) return null;
 
     let loadedCards = this.props.data;
@@ -45,21 +51,12 @@ class CardFormStack extends React.Component<IProps, IState> {
 
     let disliked: Array<CardDetailsModel> = [];
 
-    const updateStatus = () => {
-      this.setState({
-        cards: loadedCards,
-      });
-    };
+    // SWIPING CARDS PART
 
     const votingEvent = (xCoordinate: number, card: CardDetailsModel): void => {
       //Depending on drag ending coordination, cast vote and reload next card
-
-      if (loadedCards.length <= 1) {
-        this.setState({
-          cardsRated: true,
-        });
-        return;
-      }
+      // I'm using framer as the library for moving parts
+      // At the start had to use functional components, but I found some incompatabilities withing loaded dependencies, that doesnt allow me to use hooks.
 
       if (xCoordinate < 450) {
         if (!disliked.includes(card)) {
@@ -95,6 +92,13 @@ class CardFormStack extends React.Component<IProps, IState> {
           likedCards: liked,
         });
       }
+
+      if (loadedCards.length <= 0) {
+        this.setState({
+          cardsRated: true,
+        });
+        return;
+      }
     };
 
     if (!this.state.cardsRated) {
@@ -126,12 +130,47 @@ class CardFormStack extends React.Component<IProps, IState> {
       );
     }
 
+    ///
+
+    // POST REQUEST part
+
+    function handleDataSend(
+      liked: Array<CardDetailsModel>,
+      disliked: Array<CardDetailsModel>
+    ) {
+      let result: Array<CardDetailsModel> = [];
+
+      result.concat(liked, disliked);
+
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ result }),
+      };
+      fetch(
+        "https://creative-tech-code-quest.vercel.app/api/swipe/1",
+        requestOptions
+      ).then((response) => response.json());
+    }
+
+    // I assumed, that the part of url ".../swipe/1 - that the last number is
+    // the id of card that needs to be updated, but I didnt have time to finish :("
+
+    // Once all cards has been rated, execute post request.
+    if (this.state.cardsRated === true) {
+      handleDataSend(this.state.likedCards, this.state.dislikedCards);
+    }
+
+    ///
+
+    /// RENDER PART
+
     return (
       <div className="card-stack">
         <>
-          <Typography>Thanks for rating!</Typography>
+          <h1>Thanks for rating!</h1>
           <span>
-            Liked cards:{" "}
+            <h2>Liked cards: </h2>
             {this.state.likedCards.map((card) => {
               return (
                 <div key={card.id}>
@@ -143,7 +182,7 @@ class CardFormStack extends React.Component<IProps, IState> {
           </span>
           <br />
           <span>
-            Disliked cards:
+            <h2>Disliked cards: </h2>
             {this.state.dislikedCards.map((card) => {
               return (
                 <div key={card.id}>
